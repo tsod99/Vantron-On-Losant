@@ -37,23 +37,23 @@ function echo_error()
 
 # Check the docker service status and download the Losant edge agent docker image
 docker_status=`/etc/init.d/dockerd status`
-if [[ $docker_status == *"running"* ]]; then
+if echo "$docker_status" | grep -q "running"; then
   echo_success "Downloading the Losant edge agent docker image now, please wait for a while..."
   docker_image=`docker images`
-  if [[ $docker_image == *"losant/edge-agent"* ]]; then
+  if echo "$docker_image" | grep -q "losant/edge-agent"; then
     echo_success "Losant edge agent docker image exists already, moving to the next step"
   else
     docker pull losant/edge-agent:latest-alpine
     docker_image=`docker images`
-    if [[ $docker_image == *"losant/edge-agent"* ]]; then
+    if echo "$docker_image" | grep -q "losant/edge-agent"; then
       echo_success "Losant edge agent docker image has been downloaded successfully"
     else
-      echo_error "ERROR: Failed to download the Losant docker image!"
+      echo_error "Failed to download the Losant docker image!"
       exit 1
     fi
   fi
 else
-  echo_error "ERROR: Docker service is not started!"
+  echo_error "Docker service is not started!"
   exit 1
 fi
 
@@ -85,7 +85,7 @@ chmod 777 -R /mnt/USER_SPACE/pipe
 chmod +x /etc/init.d/execpipe
 /etc/init.d/execpipe enable
 service_status=`ps | grep execpipe`
-if [[ $service_status != *"/mnt/USER_SPACE/pipe/execpipe.sh"* ]]; then
+if ! echo "$service_status" | grep -q "/mnt/USER_SPACE/pipe/execpipe.sh"; then
   /etc/init.d/execpipe start
 fi
 
@@ -93,7 +93,7 @@ fi
 MAX_FLOW_RUN_TIME=300000
 
 docker_ps=`docker ps -a`
-if [[ $docker_ps == *"docs-agent"* ]]; then
+if echo "$docker_ps" | grep -q "docs-agent"; then
   echo_success "Losant docker container is already running"
 else
   docker run -d --restart always --name docs-agent \

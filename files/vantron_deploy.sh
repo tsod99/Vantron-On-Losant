@@ -29,6 +29,12 @@ function echo_success()
     echo -e "\033[1;32m$1\033[0m"
 }
 
+function echo_error()
+{
+    echo -e "\033[1;31mERROR: $1\033[0m"
+}
+
+
 # Check the docker service status and download the Losant edge agent docker image
 docker_status=`/etc/init.d/dockerd status`
 if [[ $docker_status == *"running"* ]]; then
@@ -42,12 +48,12 @@ if [[ $docker_status == *"running"* ]]; then
     if [[ $docker_image == *"losant/edge-agent"* ]]; then
       echo_success "Losant edge agent docker image has been downloaded successfully"
     else
-      echo "ERROR: Failed to download the Losant docker image!"
+      echo_error "ERROR: Failed to download the Losant docker image!"
       exit 1
     fi
   fi
 else
-  echo "ERROR: Docker service is not started!"
+  echo_error "ERROR: Docker service is not started!"
   exit 1
 fi
 

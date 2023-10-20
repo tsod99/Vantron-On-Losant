@@ -121,12 +121,12 @@ else
   while true; do
     # Check if the command's output contains the expected message
     log_command=`docker logs docs-agent`
-    if $log_command | grep -q "$expected_success_message"; then
+    if echo $log_command | grep -q "$expected_success_message"; then
       echo_success "*******************************************************************************************************"
       echo_success "* Docker container started successfully, your device will be connected to Losant server after a while *"
       echo_success "*******************************************************************************************************"
       break
-    elif $log_command | grep -q "$expected_failure_message"; then
+    elif echo $log_command | grep -q "$expected_failure_message"; then
       echo_error $log_command
       break
     fi

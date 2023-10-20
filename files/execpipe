@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common                    
+                                
+START=99                        
+STOP=15                           
+ 
+boot()  {
+        echo boot                 
+        sleep 100
+        /mnt/USER_SPACE/pipe/execpipe.sh &
+ 
+}
+                                  
+start() {
+        echo start                
+        /mnt/USER_SPACE/pipe/execpipe.sh &
+ 
+}

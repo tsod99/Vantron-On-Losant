@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 read -p "Enter device ID: " device_id
 read -p "Enter access key: " access_key

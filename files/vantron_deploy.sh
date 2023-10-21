@@ -109,7 +109,7 @@ else
   expected_success_message="Connected to: mqtts://broker.losant.com"
 
   # Expected failure output message
-  expected_failure_message="Losant Edge Agent was unable to start due to configuration errors"
+  expected_failure_message="error"
 
   # Timeout duration in seconds
   timeout_duration=300
@@ -121,12 +121,13 @@ else
   while true; do
     # Check if the command's output contains the expected message
     log_command=`docker logs docs-agent`
-    if echo $log_command | grep -q "$expected_success_message"; then
+    if echo "$log_command" | grep -q "$expected_success_message"; then
       echo_success "*******************************************************************************************************"
       echo_success "* Docker container started successfully, your device will be connected to Losant server after a while *"
       echo_success "*******************************************************************************************************"
       break
-    elif echo $log_command | grep -q "$expected_failure_message"; then
+    elif echo "$log_command" | grep -q "$expected_failure_message"; then
+      echo_error "Configuration error"
       echo_error $log_command
       break
     fi
@@ -136,7 +137,7 @@ else
 
     # Check if the timeout has been reached
     if [ $((current_time - start_time)) -ge $timeout_duration ]; then
-      echo_error "Device did not connect to the Losant platform in ""$timeout_duration""seconds"
+      echo_error "Device did not connect to the Losant platform in ""$timeout_duration"" seconds"
       break
     fi
 
